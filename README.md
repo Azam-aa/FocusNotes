@@ -13,3 +13,9 @@ A minimalist, fast, and responsive web-based notes app to help you stay focused 
 💾 Saves data using LocalStorage
 📅 Notes show created & modified date
 ⚡ Smooth transitions and clean UI
+
+### Day 9 - 24 June 2025
+- Created basic HTML structure for FocusNotes App.
+- Included title, note input section, and container for displaying notes.
+- Prepared layout for further styling and scripting.
+
