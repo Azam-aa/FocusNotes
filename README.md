@@ -19,3 +19,6 @@ A minimalist, fast, and responsive web-based notes app to help you stay focused 
 - Included title, note input section, and container for displaying notes.
 - Prepared layout for further styling and scripting.
 
+### Day 10 - 25 June 2025
+- Designed the user interface using CSS.
+- Added styling for header, note input, buttons, and layout responsiveness.
