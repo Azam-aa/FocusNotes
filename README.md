@@ -22,3 +22,7 @@ A minimalist, fast, and responsive web-based notes app to help you stay focused 
 ### Day 10 - 25 June 2025
 - Designed the user interface using CSS.
 - Added styling for header, note input, buttons, and layout responsiveness.
+
+### Day 11 - 26 June 2025
+- Implemented "Add Note" functionality with JavaScript.
+- Notes are saved and displayed using browser LocalStorage.
