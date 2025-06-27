@@ -1,62 +1,92 @@
-let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+// Get elements
+const noteTitle = document.getElementById('note-title');
+const noteContent = document.getElementById('note-content');
+const addNoteBtn = document.getElementById('add-note');
+const notesContainer = document.getElementById('notes-container');
 
-document.getElementById("theme-toggle").onclick = () => {
-  document.body.classList.toggle("dark");
+let editIndex = null;
+
+// Load notes from localStorage on page load
+window.onload = () => {
+  showNotes();
 };
 
-function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}
+// Save or Update note
+addNoteBtn.addEventListener('click', () => {
+  const title = noteTitle.value.trim();
+  const content = noteContent.value.trim();
 
-function addTask() {
-  const input = document.getElementById("task-input");
-  const tag = document.getElementById("tag").value;
-  const priority = document.getElementById("priority").value;
+  if (!title || !content) {
+    alert('Please enter both title and content!');
+    return;
+  }
 
-  if (input.value.trim() === "") return;
+  let notes = JSON.parse(localStorage.getItem('notes')) || [];
 
-  tasks.push({
-    text: input.value,
-    tag: tag.trim(),
-    priority: priority,
-    id: Date.now()
+  if (editIndex !== null) {
+    notes[editIndex] = {
+      ...notes[editIndex],
+      title,
+      content,
+      modified: new Date().toLocaleString()
+    };
+    editIndex = null;
+    addNoteBtn.textContent = 'Add Note';
+  } else {
+    const note = {
+      title,
+      content,
+      created: new Date().toLocaleString()
+    };
+    notes.push(note);
+  }
+
+  localStorage.setItem('notes', JSON.stringify(notes));
+  noteTitle.value = '';
+  noteContent.value = '';
+  showNotes();
+});
+
+// Display notes with Edit & Delete buttons
+function showNotes() {
+  const notes = JSON.parse(localStorage.getItem('notes')) || [];
+  notesContainer.innerHTML = '';
+
+  if (notes.length === 0) {
+    notesContainer.innerHTML = '<p style="text-align:center; color:#888;">No notes yet.</p>';
+    return;
+  }
+
+  notes.forEach((note, index) => {
+    const noteDiv = document.createElement('div');
+    noteDiv.className = 'note';
+    noteDiv.innerHTML = `
+      <h3>${note.title}</h3>
+      <p>${note.content}</p>
+      <small>🕒 Created: ${note.created}</small><br>
+      ${note.modified ? `<small>✏️ Modified: ${note.modified}</small><br>` : ''}
+      <button onclick="editNote(${index})">Edit</button>
+      <button onclick="deleteNote(${index})">Delete</button>
+    `;
+    notesContainer.appendChild(noteDiv);
   });
-
-  input.value = "";
-  document.getElementById("tag").value = "";
-  displayTasks();
-  saveTasks();
 }
 
-function deleteTask(id) {
-  tasks = tasks.filter(task => task.id !== id);
-  displayTasks();
-  saveTasks();
+// Edit note
+function editNote(index) {
+  const notes = JSON.parse(localStorage.getItem('notes')) || [];
+  noteTitle.value = notes[index].title;
+  noteContent.value = notes[index].content;
+  editIndex = index;
+  addNoteBtn.textContent = 'Update Note';
 }
 
-function searchTasks() {
-  const query = document.getElementById("search").value.toLowerCase();
-  displayTasks(query);
+// Delete note
+function deleteNote(index) {
+  let notes = JSON.parse(localStorage.getItem('notes')) || [];
+  if (confirm('Are you sure you want to delete this note?')) {
+    notes.splice(index, 1);
+    localStorage.setItem('notes', JSON.stringify(notes));
+    showNotes();
+  }
 }
-
-function displayTasks(filter = "") {
-  const list = document.getElementById("task-list");
-  list.innerHTML = "";
-
-  tasks
-    .filter(task => 
-      task.text.toLowerCase().includes(filter) ||
-      task.tag.toLowerCase().includes(filter)
-    )
-    .forEach(task => {
-      const li = document.createElement("li");
-      li.className = "task";
-      li.innerHTML = `
-        <span>${task.text} <span class="tag">${task.tag}</span> - <strong>${task.priority}</strong></span>
-        <button onclick="deleteTask(${task.id})">❌</button>
-      `;
-      list.appendChild(li);
-    });
-}
-
-displayTasks();
