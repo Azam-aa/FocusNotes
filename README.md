@@ -26,3 +26,7 @@ A minimalist, fast, and responsive web-based notes app to help you stay focused 
 ### Day 11 - 26 June 2025
 - Implemented "Add Note" functionality with JavaScript.
 - Notes are saved and displayed using browser LocalStorage.
+
+### Day 12 - 27 June 2025
+- Enabled Edit and Delete options for notes.
+- Users can now modify or remove existing notes.
